@@ -11,7 +11,7 @@ conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}' password='{3}'"
                 os.getenv("DB_PASSWORD")))
 
 cur = conn.cursor()
-cur.execute("DROP TABLE IF EXISTS test;")
+cur.execute("DROP TABLE IF EXISTS etherumcrowd_test;")
 cur.execute("CREATE TABLE test (id serial PRIMARY KEY, num integer UNIQUE, data varchar);")
 cur.execute("INSERT INTO test (num, data) VALUES (%s, %s)", (100, "abc'def"))
 cur.execute("SELECT * FROM test;")

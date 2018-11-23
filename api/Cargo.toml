@@ -1,0 +1,13 @@
+[package]
+authors = ["Deon <deonsummers91@gmail.com>"]
+name = "api"
+version = "0.1.0"
+
+[dependencies]
+postgres = "0.15.2"
+rocket = "0.3.17"
+rocket_codegen = "0.3.17"
+rocket_contrib = "0.3.17"
+serde = "1.0.80"
+serde_derive = "1.0.80"
+serde_json = "1.0.33"
