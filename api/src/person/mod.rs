@@ -10,7 +10,7 @@ pub struct Person {
 
 #[get("/<name>")]
 pub fn get_person(name: String) -> Json<Person> {
-    let conn = Connection::connect("postgres://postgres:postgres@localhost:5432", TlsMode::None).unwrap();
+    let conn = Connection::connect("postgres://postgres:postgres@localhost:5432/template1", TlsMode::None).unwrap();
     let rows = &conn.query("SELECT id, name FROM person WHERE name = $1", &[&name]).unwrap();
 
     let row = rows.get(0);
@@ -23,24 +23,27 @@ pub fn get_person(name: String) -> Json<Person> {
 }
 
 
-pub fn get_people() -> Json<Person> {
-    let conn = Connection::connect("postgres://postgres:postgres@localhost:5432", TlsMode::None).unwrap();
-    let people: Vec<Person> = vec![];
+#[get("/")]
+pub fn get_people() -> Json<Vec<Person>> {
+    let conn = Connection::connect("postgres://postgres:postgres@localhost:5432/template1", TlsMode::None).unwrap();
+    let mut people: Vec<Person> = vec![];
 
     let rows = &conn.query("SELECT id, name FROM person", &[]).unwrap();
 
     let row = rows.get(0);
-
-    let person = Person {
-        id: row.get(0),
-        name: row.get(1),
+    for row in rows {
+        let person = Person {
+            id: row.get(0),
+            name: row.get(1),
+        };
+        people.push(person);
     };
-    Json(person)
+    Json(people)
 }
 
 #[post("/", format = "application/json", data = "<person>")]
 pub fn create_person(person: Json<Person>) -> Json<Person> {
-    let conn = Connection::connect("postgres://postgres:postgres@localhost:5432", TlsMode::None).unwrap();
+    let conn = Connection::connect("postgres://postgres:postgres@localhost:5432/template1", TlsMode::None).unwrap();
     conn.execute("INSERT INTO person (name) VALUES ($1)", 
         &[&person.name]).unwrap();
     person

@@ -1,3 +1,9 @@
+<section>
+  <h2> Users </h2>
+  <div *ngFor="let user of (users | async)">
+    {{user.id}} - {{user.name}}
+  </div>
+</section>
 <div [hidden]="submitted">
   <h1>user Form</h1>
   <form (ngSubmit)="createUser(model)" #userForm="ngForm">
@@ -35,8 +41,3 @@
   <br>
   <button class="btn btn-primary" (click)="submitted=false">Edit</button>
 </div>
-
-<p>
-  {{id}}
-  {{name}}
-</p>

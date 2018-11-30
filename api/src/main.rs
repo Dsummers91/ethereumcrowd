@@ -1,4 +1,5 @@
 #![feature(plugin)]
+#![feature(custom_derive)]
 #![plugin(rocket_codegen)]
 
 extern crate rocket;
@@ -12,6 +13,7 @@ extern crate serde_json;
 extern crate serde_derive;
 
 mod person;
+mod reddit;
 
 use postgres::{Connection, TlsMode};
 use person::{Person};
@@ -20,7 +22,7 @@ use rocket_cors::{AllowedOrigins, AllowedHeaders};
 
 
 fn main() {
-    let conn = Connection::connect("postgres://postgres:postgres@localhost:5432", TlsMode::None).unwrap();
+    let conn = Connection::connect("postgres://postgres:postgres@localhost:5432/template1", TlsMode::None).unwrap();
 
     let default = rocket_cors::Cors::default();
 
@@ -38,9 +40,15 @@ fn main() {
     };
 
     rocket::ignite().mount("/people", routes![
-                                            person::get_person, 
-                                            person::create_person
-                                      ])
-                                      .attach(default)
-                                      .launch();
+                           person::get_person, 
+                           person::create_person,
+                           person::get_people,
+                    ])
+                    .mount("/reddit", routes![
+                           reddit::get_reddit_users, 
+                           reddit::create_reddit_user,
+                    ])
+
+                    .attach(default)
+                    .launch();
 }

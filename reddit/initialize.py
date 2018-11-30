@@ -11,10 +11,12 @@ conn = psycopg2.connect("dbname='{0}' user='{1}' host='{2}' password='{3}'"
                 os.getenv("DB_PASSWORD")))
 
 cur = conn.cursor()
-cur.execute("DROP TABLE IF EXISTS etherumcrowd_test;")
-cur.execute("CREATE TABLE test (id serial PRIMARY KEY, num integer UNIQUE, data varchar);")
-cur.execute("INSERT INTO test (num, data) VALUES (%s, %s)", (100, "abc'def"))
-cur.execute("SELECT * FROM test;")
+cur.execute("DROP TABLE IF EXISTS person;")
+cur.execute("DROP TABLE IF EXISTS person_reddit;")
+cur.execute("CREATE TABLE person (id serial PRIMARY KEY, name varchar UNIQUE);")
+cur.execute("CREATE TABLE person_reddit (id serial PRIMARY KEY, reddit_username varchar UNIQUE, person_id integer UNIQUE);")
+cur.execute("INSERT INTO person (name) VALUES (%s)", ("abc",))
+cur.execute("SELECT * FROM person;")
 row = cur.fetchall()
 
 conn.commit()

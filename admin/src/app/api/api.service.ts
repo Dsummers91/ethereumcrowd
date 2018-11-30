@@ -12,6 +12,10 @@ export class ApiService {
     return this.http.get(`http://localhost:8000/people/${name}`)
   }
 
+  getUsers(): any {
+    return this.http.get(`http://localhost:8000/people`)
+  }
+
   createUser(user: any): any {
     return this.http.post('http://localhost:8000/people', user)
   }

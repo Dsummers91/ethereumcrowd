@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api/api.service';
+import { Observable, pipe } from 'rxjs';
+import { take } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-people',
@@ -11,21 +14,19 @@ export class PeopleComponent implements OnInit {
   id: number;
   submitted: boolean = false;
   model: any = {};
+  users: Observable<any[]>;
 
   constructor(private api: ApiService) { }
 
   ngOnInit() {
-    this.api.getUser('deon')
-      .subscribe((user) => {
-        this.name = user.name;
-        this.id = user.id;
-      });
+    this.users = this.api.getUsers().pipe(take(1));
   }
 
   createUser(user: any) {
     this.api.createUser(user)
+      .pipe(take(1))
       .subscribe((result) => {
-        console.log(result);
+        this.users = this.api.getUsers().pipe(take(1));
       });
   }
 }
