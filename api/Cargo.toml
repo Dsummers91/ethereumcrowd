@@ -7,7 +7,6 @@ version = "0.1.0"
 postgres = "0.15.2"
 rocket = "0.3.17"
 rocket_codegen = "0.3.17"
-rocket_contrib = "0.3.17"
 rocket_cors = "0.3.0"
 serde = "1.0.80"
 serde_derive = "1.0.80"
@@ -17,7 +16,7 @@ dotenv = "0.13.0"
 
 
 [dependencies.rocket_contrib]
-version = "*"
+version = "0.3.17"
 default-features = false
 features = ["json"]
 
