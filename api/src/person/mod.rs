@@ -1,52 +1,42 @@
-use postgres::{Connection, TlsMode};
+use db::Conn as DbConn;
 use rocket_contrib::Json;
+use diesel::QueryDsl;
+use diesel::RunQueryDsl;
+use diesel;
+use rocket::response::status::NoContent;
+use diesel::prelude::*;
+use schema::people::dsl::*;
+use schema::people;
 
-#[derive(PartialEq, Eq, Debug, Clone, Queryable, Identifiable, Associations)]
+#[derive(Deserialize, Serialize, PartialEq, Eq, Debug, Clone, Queryable, Identifiable, Associations)]
 #[table_name = "people"]
 pub struct Person {
-    pub id: Option<i32>,
+    pub id: i32,
     pub name: String
 }
 
-
-#[get("/<name>")]
-pub fn get_person(conn: DbConn, name: String) -> Json<Person> {
-    let conn = Connection::connect("postgres://postgres:postgres@localhost:5432/test", TlsMode::None).unwrap();
-    let rows = &conn.query("SELECT id, name FROM people WHERE name = $1", &[&name]).unwrap();
-
-    let row = rows.get(0);
-
-    let person = Person {
-        id: row.get(0),
-        name: row.get(1),
-    };
-    Json(person)
+#[derive(Deserialize, Insertable, Serialize)] 
+#[table_name = "people"]
+pub struct NewPerson {
+    pub name: String
 }
 
+#[get("/<person>")]
+pub fn get(person: String, conn: DbConn) -> Json<Person> {
+    let person_request = people.filter(name.eq(person)).get_result::<Person>(&*conn);
+    Json(person_request.unwrap())
+}
 
 #[get("/")]
-pub fn get_people() -> Json<Vec<Person>> {
-    let conn = Connection::connect("postgres://postgres:postgres@localhost:5432/test", TlsMode::None).unwrap();
-    let mut people: Vec<Person> = vec![];
-
-    let rows = &conn.query("SELECT id, name FROM people", &[]).unwrap();
-
-    let row = rows.get(0);
-    for row in rows {
-        let person = Person {
-            id: row.get(0),
-            name: row.get(1),
-        };
-        people.push(person);
-    };
-    Json(people)
+pub fn list(conn: DbConn) -> Json<Vec<Person>> {
+    let person_request = people.load::<Person>(&*conn);
+    Json(person_request.unwrap())
 }
 
 #[post("/", format = "application/json", data = "<person>")]
-pub fn create_person(person: Json<Person>) -> Json<Person> {
-    let conn = Connection::connect("postgres://postgres:postgres@localhost:5432/test", TlsMode::None).unwrap();
-    conn.execute("INSERT INTO people (name) VALUES ($1)", 
-        &[&person.name]).unwrap();
-    person
+fn create(person: Json<NewPerson>, conn: DbConn) -> Json<Person> {
+    let new_person = diesel::insert_into(people)
+        .values(&person.into_inner())
+        .get_result(&*conn);
+    Json(new_person.unwrap())
 }
-

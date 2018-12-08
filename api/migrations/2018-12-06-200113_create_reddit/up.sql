@@ -1,0 +1,5 @@
+CREATE TABLE reddit (
+  id SERIAL PRIMARY KEY,
+  person_id INTEGER UNIQUE NOT NULL,
+  username VARCHAR UNIQUE NOT NULL
+)

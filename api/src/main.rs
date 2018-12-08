@@ -1,58 +1,60 @@
 #![feature(plugin)]
-#![feature(custom_derive)]
 #![plugin(rocket_codegen)]
+#![feature(custom_attribute)]
+#![feature(custom_derive)]
 
-extern crate rocket;
-#[macro_use] extern crate rocket_contrib;
-extern crate rocket_cors;
-extern crate postgres;
-extern crate serde;
-extern crate serde_json;
+#[cfg(test)]
+mod tests;
 
+/// ORM and config
+#[macro_use]
+extern crate diesel;
+extern crate dotenv;
 #[macro_use]
 extern crate serde_derive;
 
+/// Connection pooling
+extern crate r2d2;
+extern crate r2d2_diesel;
+
+// Web server
+extern crate rocket;
+extern crate rocket_contrib;
+
+mod db;
+mod schema;
 mod person;
 mod reddit;
 
-use postgres::{Connection, TlsMode};
-use person::{Person};
-use rocket::http::Method;
-use rocket_cors::{AllowedOrigins, AllowedHeaders};
-use rocket_contrib::databases::diesel;
+use rocket::response::NamedFile;
+use rocket::Rocket;
+use std::path::{Path, PathBuf};
+use dotenv::dotenv;
+use std::env;
 
-#[database("sqlite_logs")]
-struct Db(diesel::PostgresConnection);
-
-fn main() {
-
+fn rocket() -> Rocket {
+    dotenv().ok();
     let default = rocket_cors::Cors::default();
 
-    let (allowed_origins, failed_origins) = AllowedOrigins::some(&["localhost:4200"]);
-    
-    assert!(failed_origins.is_empty());
+    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
 
-    // You can also deserialize this
-    let options = rocket_cors::Cors {
-        allowed_origins: AllowedOrigins::all(), 
-        allowed_methods: vec![Method::Get, Method::Post, Method::Options].into_iter().map(From::from).collect(),
-        allowed_headers: AllowedHeaders::some(&["Authorization", "Accept"]),
-        allow_credentials: true,
-        ..Default::default()
-    };
+    // Initializes database pool with r2d2.
+    let pool = db::init_pool(database_url);
 
-    rocket::ignite()
-            .manage(pg_pool::init(&database_url))
-            .mount("/people", routes![
-                           person::get_person, 
-                           person::create_person,
-                           person::get_people,
-                    ])
-                    .mount("/reddit", routes![
-                           reddit::get_reddit_users, 
-                           reddit::create_reddit_user,
-                    ])
+    rocket::ignite().manage(pool)
+        .attach(default)
+        .mount("/people", routes![
+               person::get,
+               person::create,
+               person::list
+        ])
+        .mount("/reddit", routes![
+               reddit::create,
+               reddit::list
+        ])
+}
 
-                    .attach(default)
-                    .launch();
+/// Launch our webserver
+fn main() {
+    rocket().launch();
 }
