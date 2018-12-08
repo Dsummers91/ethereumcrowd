@@ -31,7 +31,8 @@ reddit = praw.Reddit(client_id=os.getenv("REDDIT_ID"),
 
 
 for row in rows:
-    print(row[1])
-    for comment in reddit.redditor(row[1]).comments.new(limit=10):
+    print("--------------------------")
+    print(row[2])
+    for comment in reddit.redditor(row[2]).comments.new(limit=10):
         print(comment.body)
         print(comment.created_utc)

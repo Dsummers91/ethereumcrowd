@@ -6,13 +6,14 @@ use diesel;
 use rocket::response::status::NoContent;
 use diesel::prelude::*;
 use schema::people::dsl::*;
-use schema::people;
+use schema::{people, reddit};
+use reddit::Reddit;
 
 #[derive(Deserialize, Serialize, PartialEq, Eq, Debug, Clone, Queryable, Identifiable, Associations)]
 #[table_name = "people"]
 pub struct Person {
     pub id: i32,
-    pub name: String
+    pub name: String,
 }
 
 #[derive(Deserialize, Insertable, Serialize)] 
@@ -23,13 +24,17 @@ pub struct NewPerson {
 
 #[get("/<person>")]
 pub fn get(person: String, conn: DbConn) -> Json<Person> {
-    let person_request = people.filter(name.eq(person)).get_result::<Person>(&*conn);
+    let person_request = people
+        .filter(name.eq(person))
+        .get_result::<Person>(&*conn);
     Json(person_request.unwrap())
 }
 
 #[get("/")]
-pub fn list(conn: DbConn) -> Json<Vec<Person>> {
-    let person_request = people.load::<Person>(&*conn);
+pub fn list(conn: DbConn) -> Json<Vec<(Person, Option<Reddit>)>> {
+    let person_request = people
+                            .left_outer_join(reddit::table)
+                            .load::<(Person, Option<Reddit>)>(&*conn);
     Json(person_request.unwrap())
 }
 
