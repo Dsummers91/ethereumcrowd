@@ -1,3 +1,4 @@
+#![allow(proc_macro_derive_resolution_fallback)]
 #![feature(custom_derive)]
 use db::Conn as DbConn;
 use rocket_contrib::Json;
@@ -10,22 +11,21 @@ use schema::reddit::dsl::*;
 use person::Person;
 use schema::{people, reddit};
 
-
-
+use uuid::Uuid;
 
 #[derive(Identifiable, Serialize, Deserialize, Queryable, Associations, PartialEq, Debug)]
 #[belongs_to(Person, foreign_key = "person_id")]
 #[table_name = "reddit"]
 pub struct Reddit {
-    pub id: i32,
-    pub person_id: i32,
+    pub id: Uuid,
+    pub person_id: Uuid,
     pub username: String,
 }
 
 #[derive(Serialize, Deserialize, Insertable)]
 #[table_name = "reddit"]
 pub struct Create_Reddit {
-    pub person_id: i32,
+    pub person_id: Uuid,
     pub username: String,
 }
 

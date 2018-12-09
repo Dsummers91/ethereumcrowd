@@ -12,6 +12,7 @@ extern crate diesel;
 extern crate dotenv;
 #[macro_use]
 extern crate serde_derive;
+extern crate uuid;
 
 /// Connection pooling
 extern crate r2d2;

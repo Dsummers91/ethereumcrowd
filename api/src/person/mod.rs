@@ -1,3 +1,5 @@
+#![allow(proc_macro_derive_resolution_fallback)]
+
 use db::Conn as DbConn;
 use rocket_contrib::Json;
 use diesel::QueryDsl;
@@ -9,10 +11,12 @@ use schema::people::dsl::*;
 use schema::{people, reddit};
 use reddit::Reddit;
 
+use uuid::Uuid;
+
 #[derive(Deserialize, Serialize, PartialEq, Eq, Debug, Clone, Queryable, Identifiable, Associations)]
 #[table_name = "people"]
 pub struct Person {
-    pub id: i32,
+    pub id: Uuid,
     pub name: String,
 }
 
@@ -40,6 +44,7 @@ pub fn list(conn: DbConn) -> Json<Vec<(Person, Option<Reddit>)>> {
 
 #[post("/", format = "application/json", data = "<person>")]
 fn create(person: Json<NewPerson>, conn: DbConn) -> Json<Person> {
+    println!("{}", Uuid::new_v4());
     let new_person = diesel::insert_into(people)
         .values(&person.into_inner())
         .get_result(&*conn);

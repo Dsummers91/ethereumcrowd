@@ -1,6 +1,6 @@
 table! {
     people (id) {
-        id -> Int4,
+        id -> Uuid,
         name -> Varchar,
     }
 }
@@ -22,17 +22,17 @@ table! {
 
 table! {
     reddit (id) {
-        id -> Int4,
-        person_id -> Int4,
+        id -> Uuid,
+        person_id -> Uuid,
         username -> Varchar,
     }
 }
 
 table! {
     reddit_posts (id) {
-        id -> Int4,
-        reddit_id -> Int4,
-        post_id -> Int4,
+        id -> Uuid,
+        reddit_id -> Uuid,
+        post_id -> Uuid,
         body -> Varchar,
         create_time -> Timestamp,
     }
