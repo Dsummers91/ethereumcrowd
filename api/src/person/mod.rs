@@ -13,17 +13,21 @@ use reddit::Reddit;
 
 use uuid::Uuid;
 
-#[derive(Deserialize, Serialize, PartialEq, Eq, Debug, Clone, Queryable, Identifiable, Associations)]
+#[derive(Deserialize, Serialize, Insertable, PartialEq, Eq, Debug, Clone, Queryable, Identifiable, Associations)]
 #[table_name = "people"]
 pub struct Person {
     pub id: Uuid,
     pub name: String,
 }
 
-#[derive(Deserialize, Insertable, Serialize)] 
+#[derive(Deserialize)] 
 #[table_name = "people"]
 pub struct NewPerson {
     pub name: String
+}
+
+pub fn attach_uuid(person: NewPerson) -> Person {
+    Person{name: person.name, id: Uuid::new_v4()}
 }
 
 #[get("/<person>")]
@@ -44,9 +48,9 @@ pub fn list(conn: DbConn) -> Json<Vec<(Person, Option<Reddit>)>> {
 
 #[post("/", format = "application/json", data = "<person>")]
 fn create(person: Json<NewPerson>, conn: DbConn) -> Json<Person> {
-    println!("{}", Uuid::new_v4());
-    let new_person = diesel::insert_into(people)
-        .values(&person.into_inner())
+    let new_person = attach_uuid(person.into_inner());
+    let nperson = diesel::insert_into(people)
+        .values(&new_person)
         .get_result(&*conn);
-    Json(new_person.unwrap())
+    Json(nperson.unwrap())
 }

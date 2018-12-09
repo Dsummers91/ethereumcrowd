@@ -13,7 +13,7 @@ use schema::{people, reddit};
 
 use uuid::Uuid;
 
-#[derive(Identifiable, Serialize, Deserialize, Queryable, Associations, PartialEq, Debug)]
+#[derive(Identifiable, Insertable, Serialize, Deserialize, Queryable, Associations, PartialEq, Debug)]
 #[belongs_to(Person, foreign_key = "person_id")]
 #[table_name = "reddit"]
 pub struct Reddit {
@@ -22,11 +22,15 @@ pub struct Reddit {
     pub username: String,
 }
 
-#[derive(Serialize, Deserialize, Insertable)]
+#[derive(Serialize, Deserialize)]
 #[table_name = "reddit"]
-pub struct Create_Reddit {
+pub struct NewReddit {
     pub person_id: Uuid,
     pub username: String,
+}
+
+pub fn attach_uuid(r: NewReddit) -> Reddit {
+    Reddit{person_id: r.person_id, username: r.username, id: Uuid::new_v4()}
 }
 
 #[get("/")]
@@ -36,9 +40,10 @@ pub fn list(conn: DbConn) -> Json<Vec<Reddit>> {
 }
 
 #[post("/", format = "application/json", data = "<reddit_name>")]
-pub fn create(reddit_name: Json<Create_Reddit>, conn: DbConn) -> Json<Reddit> {
+pub fn create(reddit_name: Json<NewReddit>, conn: DbConn) -> Json<Reddit> {
+    let nreddit = attach_uuid(reddit_name.into_inner());
     let new_reddit = diesel::insert_into(reddit)
-        .values(&reddit_name.into_inner())
+        .values(&nreddit)
         .get_result(&*conn);
     Json(new_reddit.unwrap())
 }
