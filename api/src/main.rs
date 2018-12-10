@@ -10,6 +10,7 @@ mod tests;
 #[macro_use]
 extern crate diesel;
 extern crate dotenv;
+extern crate chrono;
 #[macro_use]
 extern crate serde_derive;
 extern crate uuid;
@@ -47,11 +48,13 @@ fn rocket() -> Rocket {
         .mount("/people", routes![
                person::get,
                person::create,
-               person::list
+               person::list,
         ])
         .mount("/reddit", routes![
                reddit::create,
-               reddit::list
+               reddit::list,
+               reddit::reddit_post::create,
+               reddit::reddit_post::list,
         ])
 }
 

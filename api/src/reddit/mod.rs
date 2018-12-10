@@ -13,6 +13,8 @@ use schema::{people, reddit};
 
 use uuid::Uuid;
 
+pub mod reddit_post;
+
 #[derive(Identifiable, Insertable, Serialize, Deserialize, Queryable, Associations, PartialEq, Debug)]
 #[belongs_to(Person, foreign_key = "person_id")]
 #[table_name = "reddit"]
@@ -33,8 +35,14 @@ pub fn attach_uuid(r: NewReddit) -> Reddit {
     Reddit{person_id: r.person_id, username: r.username, id: Uuid::new_v4()}
 }
 
+pub fn get_id(n: String, conn: &DbConn) -> String {
+    reddit.filter(username.eq(n)).select(id).first::<Uuid>(&**conn).unwrap().hyphenated().to_string()
+}
+
 #[get("/")]
 pub fn list(conn: DbConn) -> Json<Vec<Reddit>> {
+    let uid = get_id(String::from("test"), &conn);
+    println!("{:?}", uid);
     let person_request = reddit.load::<Reddit>(&*conn);
     Json(person_request.unwrap())
 }
