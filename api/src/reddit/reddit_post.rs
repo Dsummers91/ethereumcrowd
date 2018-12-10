@@ -1,6 +1,3 @@
-#![allow(proc_macro_derive_resolution_fallback)]
-#![feature(custom_derive)]
-
 use db::Conn as DbConn;
 use rocket_contrib::Json;
 use diesel::QueryDsl;

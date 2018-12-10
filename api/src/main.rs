@@ -2,9 +2,7 @@
 #![plugin(rocket_codegen)]
 #![feature(custom_attribute)]
 #![feature(custom_derive)]
-
-#[cfg(test)]
-mod tests;
+#![allow(proc_macro_derive_resolution_fallback)]
 
 /// ORM and config
 #[macro_use]

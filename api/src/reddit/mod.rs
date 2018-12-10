@@ -1,5 +1,3 @@
-#![allow(proc_macro_derive_resolution_fallback)]
-#![feature(custom_derive)]
 use db::Conn as DbConn;
 use rocket_contrib::Json;
 use diesel::QueryDsl;
@@ -14,6 +12,7 @@ use schema::{people, reddit};
 use uuid::Uuid;
 
 pub mod reddit_post;
+mod test;
 
 #[derive(Identifiable, Insertable, Serialize, Deserialize, Queryable, Associations, PartialEq, Debug)]
 #[belongs_to(Person, foreign_key = "person_id")]
