@@ -38,13 +38,13 @@ pub fn attach_uuid(r: NewRedditPost) -> RedditPost {
     RedditPost{post_id: r.post_id, reddit_id: r.reddit_id, body: r.body, id: Uuid::new_v4()}
 }
 
-#[get("/post")]
+#[get("/posts")]
 pub fn list(conn: DbConn) -> Json<Vec<RedditPost>> {
     let person_request = reddit_posts.load::<RedditPost>(&*conn);
     Json(person_request.unwrap())
 }
 
-#[post("/post", format = "application/json", data = "<reddit_post>")]
+#[post("/posts", format = "application/json", data = "<reddit_post>")]
 pub fn create(reddit_post: Json<NewRedditPost>, conn: DbConn) -> Json<RedditPost> {
     let nreddit = attach_uuid(reddit_post.into_inner());
     let new_reddit = diesel::insert_into(reddit_posts)
