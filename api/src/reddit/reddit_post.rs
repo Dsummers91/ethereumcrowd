@@ -7,11 +7,9 @@ use rocket::response::status::NoContent;
 use diesel::prelude::*;
 use schema::reddit_posts::dsl::*;
 use schema::{people, reddit, reddit_posts};
-use diesel::types::Timestamp;
 use reddit::Reddit;
-
-
 use uuid::Uuid;
+use reddit::get_id;
 
 #[derive(Identifiable, Insertable, Serialize, Deserialize, Queryable, Associations, PartialEq)]
 #[belongs_to(Reddit, foreign_key = "reddit_id")]
@@ -27,12 +25,13 @@ pub struct RedditPost {
 #[table_name = "reddit"]
 pub struct NewRedditPost {
     pub post_id: String,
-    pub reddit_id: Uuid,
+    pub username: String,
     pub body: String
 }
 
-pub fn attach_uuid(r: NewRedditPost) -> RedditPost {
-    RedditPost{post_id: r.post_id, reddit_id: r.reddit_id, body: r.body, id: Uuid::new_v4()}
+pub fn populate_new_reddit_post(r: NewRedditPost, conn: &DbConn) -> RedditPost {
+    let reddit_uid = get_id(r.username, &*conn);
+    RedditPost{post_id: r.post_id, reddit_id: reddit_uid, body: r.body, id: Uuid::new_v4()}
 }
 
 #[get("/posts")]
@@ -43,7 +42,7 @@ pub fn list(conn: DbConn) -> Json<Vec<RedditPost>> {
 
 #[post("/posts", format = "application/json", data = "<reddit_post>")]
 pub fn create(reddit_post: Json<NewRedditPost>, conn: DbConn) -> Json<RedditPost> {
-    let nreddit = attach_uuid(reddit_post.into_inner());
+    let nreddit = populate_new_reddit_post(reddit_post.into_inner(), &conn);
     let new_reddit = diesel::insert_into(reddit_posts)
         .values(&nreddit)
         .get_result(&*conn);

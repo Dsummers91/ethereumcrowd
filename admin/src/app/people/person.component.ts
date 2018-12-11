@@ -21,7 +21,6 @@ export class PersonComponent implements OnInit {
   ngOnInit() {
     let id = this.route.snapshot.paramMap.get('id');
     this.person$ = this.api.getUser(id);
-    console.log(this.person$)
   }
 
 }

@@ -30,10 +30,14 @@ pub fn attach_uuid(person: NewPerson) -> Person {
     Person{name: person.name, id: Uuid::new_v4()}
 }
 
+pub fn get_id(n: String, conn: &DbConn) -> Uuid {
+    people.filter(name.ilike(n)).select(id).first::<Uuid>(&**conn).unwrap()
+}
+
 #[get("/<person>")]
 pub fn get(person: String, conn: DbConn) -> Json<Person> {
     let person_request = people
-        .filter(name.eq(person))
+        .filter(name.ilike(person))
         .get_result::<Person>(&*conn);
     Json(person_request.unwrap())
 }
