@@ -3,4 +3,6 @@
 </p>
 
 
-<input type="text" #newRedditor/> <button (click)="createRedditor(newRedditor.value)">Create</button> 
+<p *ngFor="let post of (posts$ | async)">
+  {{  (post | json) }}
+</p>

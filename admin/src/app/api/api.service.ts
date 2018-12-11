@@ -12,6 +12,10 @@ export class ApiService {
     return this.http.get(`http://localhost:8000/people/${name}`)
   }
 
+  getUserPosts(name: string): any {
+    return this.http.get(`http://localhost:8000/reddit/posts/${name}`)
+  }
+
   getUsers(): any {
     return this.http.get(`http://localhost:8000/people`)
   }

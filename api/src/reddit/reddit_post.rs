@@ -40,6 +40,13 @@ pub fn list(conn: DbConn) -> Json<Vec<RedditPost>> {
     Json(person_request.unwrap())
 }
 
+#[get("/posts/<username>")]
+pub fn get(username: String, conn: DbConn) -> Json<Vec<RedditPost>> {
+    let reddit_uid = get_id(username, &conn);
+    let person_request = reddit_posts.filter(reddit_id.eq(reddit_uid)).load::<RedditPost>(&*conn);
+    Json(person_request.unwrap())
+}
+
 #[post("/posts", format = "application/json", data = "<reddit_post>")]
 pub fn create(reddit_post: Json<NewRedditPost>, conn: DbConn) -> Json<RedditPost> {
     let nreddit = populate_new_reddit_post(reddit_post.into_inner(), &conn);

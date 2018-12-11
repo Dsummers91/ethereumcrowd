@@ -11,6 +11,7 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 })
 export class PersonComponent implements OnInit {
   person$: any;
+  posts$: any;
 
   constructor(  private route: ActivatedRoute,
     private router: Router,
@@ -21,6 +22,7 @@ export class PersonComponent implements OnInit {
   ngOnInit() {
     let id = this.route.snapshot.paramMap.get('id');
     this.person$ = this.api.getUser(id);
+    this.posts$ = this.api.getUserPosts(id);
   }
 
   createRedditor(username) {

@@ -8,8 +8,9 @@ use diesel;
 use rocket::response::status::NoContent;
 use diesel::prelude::*;
 use schema::people::dsl::*;
-use schema::{people, reddit};
+use schema::{people, reddit, reddit_posts};
 use reddit::Reddit;
+use reddit::reddit_post::RedditPost;
 
 use uuid::Uuid;
 
@@ -42,11 +43,19 @@ pub fn get(person: String, conn: DbConn) -> Json<Person> {
     Json(person_request.unwrap())
 }
 
-#[get("/")]
-pub fn list(conn: DbConn) -> Json<Vec<(Person, Option<Reddit>)>> {
+#[get("/<person>/posts")]
+pub fn get_comments(person: String, conn: DbConn) -> Json<Vec<(Person, (Reddit, RedditPost))>> {
     let person_request = people
-                            .left_outer_join(reddit::table)
-                            .load::<(Person, Option<Reddit>)>(&*conn);
+        .filter(name.ilike(person))
+        .inner_join(reddit::table
+            .inner_join(reddit_posts::table))
+        .load::<(Person, (Reddit, RedditPost))>(&*conn);
+    Json(person_request.unwrap())
+}
+
+#[get("/")]
+pub fn list(conn: DbConn) -> Json<Vec<Person>> { 
+    let person_request = people.load::<Person>(&*conn);
     Json(person_request.unwrap())
 }
 
