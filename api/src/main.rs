@@ -33,7 +33,7 @@ use dotenv::dotenv;
 use std::env;
 
 fn rocket() -> Rocket {
-    dotenv().ok();
+    dotenv::from_filename("../.env").ok();
     let default = rocket_cors::Cors::default();
 
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
