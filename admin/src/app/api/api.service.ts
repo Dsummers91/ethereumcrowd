@@ -19,4 +19,8 @@ export class ApiService {
   createUser(user: any): any {
     return this.http.post('http://localhost:8000/people', user)
   }
+
+  createRedditor(person: string, username: string): any {
+    return this.http.post('http://localhost:8000/reddit', {username: username, person: person});
+  }
 }

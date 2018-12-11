@@ -23,4 +23,11 @@ export class PersonComponent implements OnInit {
     this.person$ = this.api.getUser(id);
   }
 
+  createRedditor(username) {
+    let person = this.route.snapshot.paramMap.get('id');
+    this.api.createRedditor(person, username)
+      .subscribe(() => {
+        console.log('test');
+      });
+  }
 }

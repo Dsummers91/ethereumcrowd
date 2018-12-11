@@ -1,3 +1,6 @@
 <p>
   {{  (person$ | async)?.name }}
 </p>
+
+
+<input type="text" #newRedditor/> <button (click)="createRedditor(newRedditor.value)">Create</button> 
