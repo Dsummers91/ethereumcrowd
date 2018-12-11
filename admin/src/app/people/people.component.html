@@ -1,7 +1,7 @@
 <section>
   <h2> Users </h2>
   <div *ngFor="let user of (users | async)">
-    {{user[0].id}} - {{user[0].name}} - {{user[1]?.username}}
+    {{user.id}} - {{user.name}}
   </div>
 </section>
 <div>

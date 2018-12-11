@@ -39,6 +39,9 @@ for row in rows:
     print(row[2])
     for comment in reddit.redditor(row[2]).comments.new(limit=10):
         r = requests.post("http://localhost:8000/reddit/posts", json={'username': row[2], 'post_id': comment.id, 'body': comment.body}, headers={'Content-type': 'application/json'})
-        print(r)
-        print(comment.body)
-        print(comment.created_utc)
+
+    for submission in reddit.redditor(row[2]).submissions.new(limit=10):
+        #r = requests.post("http://localhost:8000/reddit/posts", json={'username': row[2], 'post_id': comment.id, 'body': comment.body}, headers={'Content-type': 'application/json'})
+        print(submission.title)
+        print(submission.selftext)
+        print('-----------')
