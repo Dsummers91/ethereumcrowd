@@ -20,8 +20,7 @@ api = twitter.Api(consumer_key=os.getenv("TWITTER_CONSUMER_KEY"),
         access_token_secret=os.getenv("TWITTER_API_SECRET"))
 
 
-users = api.GetFriends()
+users = api.GetUserTimeline(screen_name="ElonMusk")
 
-print([u.screen_name for u in users])
-
+print([u.text for u in users])
 
