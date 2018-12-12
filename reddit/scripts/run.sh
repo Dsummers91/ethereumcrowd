@@ -4,5 +4,5 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null  && cd ../ > /dev/null 
 
 pushd $DIR >/dev/null
 source ./venv/bin/activate
-python ./user.py
+python ./reddit.py
 popd >/dev/null

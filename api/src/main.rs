@@ -25,6 +25,7 @@ mod db;
 mod schema;
 mod person;
 mod reddit;
+mod twitter;
 
 use rocket::response::NamedFile;
 use rocket::Rocket;
@@ -52,12 +53,18 @@ fn rocket() -> Rocket {
         .mount("/reddit", routes![
                reddit::create,
                reddit::list,
+//               reddit::get,
                reddit::reddit_post::create,
                reddit::reddit_post::list,
                reddit::reddit_post::get,
                reddit::reddit_comment::create,
                reddit::reddit_comment::list,
                reddit::reddit_comment::get,
+        ])
+        .mount("/twitter", routes![
+               twitter::create,
+               twitter::list,
+//               twitter::get,
         ])
 }
 

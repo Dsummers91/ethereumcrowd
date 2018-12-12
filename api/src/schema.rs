@@ -59,9 +59,18 @@ table! {
     }
 }
 
+table! {
+    twitter (id) {
+        id -> Uuid,
+        person_id -> Uuid,
+        username -> Varchar,
+    }
+}
+
 joinable!(reddit -> people (person_id));
 joinable!(reddit_comments -> reddit (reddit_id));
 joinable!(reddit_posts -> reddit (reddit_id));
+joinable!(twitter -> people (person_id));
 
 allow_tables_to_appear_in_same_query!(
     people,
@@ -71,4 +80,5 @@ allow_tables_to_appear_in_same_query!(
     reddit_comments,
     reddit_posts,
     test,
+    twitter,
 );
