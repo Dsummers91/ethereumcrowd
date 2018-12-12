@@ -55,6 +55,9 @@ fn rocket() -> Rocket {
                reddit::reddit_post::create,
                reddit::reddit_post::list,
                reddit::reddit_post::get,
+               reddit::reddit_comment::create,
+               reddit::reddit_comment::list,
+               reddit::reddit_comment::get,
         ])
 }
 

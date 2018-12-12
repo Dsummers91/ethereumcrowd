@@ -19,6 +19,9 @@ pub struct RedditPost {
     pub reddit_id: Uuid,
     pub post_id: String,
     pub body: String,
+    pub title: String,
+    pub score: i32,
+    pub subreddit: String,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -26,12 +29,15 @@ pub struct RedditPost {
 pub struct NewRedditPost {
     pub post_id: String,
     pub username: String,
-    pub body: String
+    pub body: String,
+    pub title: String,
+    pub score: i32,
+    pub subreddit: String,
 }
 
 pub fn populate_new_reddit_post(r: NewRedditPost, conn: &DbConn) -> RedditPost {
     let reddit_uid = get_id(r.username, &*conn);
-    RedditPost{post_id: r.post_id, reddit_id: reddit_uid, body: r.body, id: Uuid::new_v4()}
+    RedditPost{post_id: r.post_id, reddit_id: reddit_uid, title: r.title, score: r.score, subreddit: r.subreddit, body: r.body, id: Uuid::new_v4()}
 }
 
 #[get("/posts")]

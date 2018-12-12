@@ -12,6 +12,7 @@ use schema::{people, reddit};
 use uuid::Uuid;
 
 pub mod reddit_post;
+pub mod reddit_comment;
 mod test;
 
 #[derive(Identifiable, Insertable, Serialize, Deserialize, Queryable, Associations, PartialEq, Debug)]

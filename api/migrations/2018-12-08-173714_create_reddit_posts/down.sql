@@ -1,1 +1,1 @@
-DROP TABLE IF EXISTS reddit_posts
+DROP TABLE reddit_posts
