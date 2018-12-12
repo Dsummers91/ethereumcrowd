@@ -11,7 +11,6 @@ use schema::people::dsl::*;
 use schema::{people, reddit, reddit_posts};
 use reddit::Reddit;
 use reddit::reddit_post::RedditPost;
-
 use uuid::Uuid;
 
 #[derive(Deserialize, Serialize, Insertable, PartialEq, Eq, Debug, Clone, Queryable, Identifiable, Associations)]
@@ -31,6 +30,7 @@ pub fn attach_uuid(person: NewPerson) -> Person {
     Person{name: person.name, id: Uuid::new_v4()}
 }
 
+/// Get ID of a person by name
 pub fn get_id(n: String, conn: &DbConn) -> Uuid {
     people.filter(name.ilike(n)).select(id).first::<Uuid>(&**conn).unwrap()
 }
