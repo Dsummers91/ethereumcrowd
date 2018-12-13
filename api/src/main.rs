@@ -53,7 +53,7 @@ fn rocket() -> Rocket {
         .mount("/reddit", routes![
                reddit::create,
                reddit::list,
-//               reddit::get,
+               reddit::get,
                reddit::reddit_post::create,
                reddit::reddit_post::list,
                reddit::reddit_post::get,
