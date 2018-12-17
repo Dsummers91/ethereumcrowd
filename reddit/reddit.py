@@ -42,7 +42,7 @@ for row in rows:
                                 'username': row[2], 
                                 'comment_id': comment.id, 
                                 'score': comment.score, 
-                                'subreddit': comment.subreddit.display_name
+                                'subreddit': comment.subreddit.display_name,
                                 'body': comment.body,
                                 }, headers={'Content-type': 'application/json'})
         pass 
