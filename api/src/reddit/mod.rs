@@ -25,7 +25,6 @@ pub struct Reddit {
 }
 
 #[derive(Serialize, Deserialize)]
-#[table_name = "reddit"]
 pub struct NewReddit {
     pub person: String,
     pub username: String,

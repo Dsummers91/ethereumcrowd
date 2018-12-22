@@ -21,7 +21,6 @@ pub struct Person {
 }
 
 #[derive(Deserialize)] 
-#[table_name = "people"]
 pub struct NewPerson {
     pub name: String
 }

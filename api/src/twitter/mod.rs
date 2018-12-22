@@ -20,7 +20,6 @@ pub struct Twitter {
 }
 
 #[derive(Serialize, Deserialize)]
-#[table_name = "twitter"]
 pub struct NewTwitter {
     pub person: String,
     pub username: String,
