@@ -1,0 +1,32 @@
+#!/bin/bash
+
+CURRENT_DIR=$pwd
+SESSION_NAME="ec"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && cd ../ > /dev/null && pwd )"
+
+cd $DIR
+
+#!/bin/sh
+tmux has-session -t ${SESSION_NAME}
+
+if [ $? != 0 ]
+then
+  # Create the session
+  tmux new-session -s ${SESSION_NAME} -n api -d
+
+  tmux send-keys -t ${SESSION_NAME} './scripts/api' C-m
+
+  tmux new-window -n front-end -t ${SESSION_NAME}
+  tmux send-keys -t ${SESSION_NAME}:1 './scripts/front-end' C-m
+
+  tmux new-window -n admin -t ${SESSION_NAME}
+  tmux send-keys -t ${SESSION_NAME}:2 './scripts/admin' C-m
+
+
+  # Start out on the first window when we attach
+  tmux select-window -t ${SESSION_NAME}:0
+fi
+
+tmux attach -t ${SESSION_NAME}
+
+cd $CURRENT_DIR
