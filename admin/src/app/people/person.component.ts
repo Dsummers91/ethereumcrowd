@@ -12,6 +12,7 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 export class PersonComponent implements OnInit {
   person$: any;
   posts$: any;
+  posts: any[];
 
   constructor(  private route: ActivatedRoute,
     private router: Router,
@@ -31,5 +32,14 @@ export class PersonComponent implements OnInit {
       .subscribe(() => {
         console.log('test');
       });
+  }  
+  
+  createTwitter(username) {
+    let person = this.route.snapshot.paramMap.get('id');
+    this.api.createTwitter(person, username)
+      .subscribe(() => {
+        console.log('test');
+      });
   }
+
 }

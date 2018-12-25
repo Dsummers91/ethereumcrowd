@@ -31,4 +31,8 @@ export class ApiService {
   createRedditor(person: string, username: string): any {
     return this.http.post('http://localhost:8000/reddit', {username: username, person: person});
   }
+
+  createTwitter(person: string, username: string): any {
+    return this.http.post('http://localhost:8000/twitter', {username: username, person: person});
+  }
 }

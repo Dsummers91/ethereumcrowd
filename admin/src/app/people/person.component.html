@@ -1,8 +1,32 @@
-<p>
-  {{  (person$ | async)?.name }}
-</p>
+{{  (person$ | async)?.name }}
+<div>
+  <h1>Twitter Form</h1>
+  <form (ngSubmit)="createTwitter(twitter)" #twitterForm="ngForm">
 
+    <label for="name">Name</label>
+    <input type="text" class="form-control" id="name"
+                                            required
+                                            [(ngModel)]="twitter" name="name"
+                                                                     #name="ngModel">
+    <button type="submit" class="btn btn-success" [disabled]="!twitterForm.form.valid">Submit</button>
 
-<p *ngFor="let post of (posts$ | async)">
-  {{  (post | json) }}
-</p>
+  </form>
+  <h1>Reddit Form</h1>
+  <form (ngSubmit)="createRedditor(reddit)" #redditForm="ngForm">
+
+    <label for="name">Name</label>
+    <input type="text" class="form-control" id="name"
+                                            required
+                                            [(ngModel)]="reddit" name="name"
+                                                                     #name="ngModel">
+    <button type="submit" class="btn btn-success" [disabled]="!redditForm.form.valid">Submit</button>
+
+  </form>
+
+</div>
+<table>
+  <tr *ngFor="let post of (posts$ | async)">
+    <td> {{ post[1][1].title }} </td>
+    <td> {{ post[1][1].body }} </td>
+  </tr>
+</table>
