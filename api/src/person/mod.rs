@@ -13,14 +13,17 @@ use reddit::Reddit;
 use reddit::reddit_post::RedditPost;
 use uuid::Uuid;
 
+mod test;
+
 #[derive(Deserialize, Serialize, Insertable, PartialEq, Eq, Debug, Clone, Queryable, Identifiable, Associations)]
 #[table_name = "people"]
+
 pub struct Person {
     pub id: Uuid,
     pub name: String,
 }
 
-#[derive(Deserialize)] 
+#[derive(Deserialize)]
 pub struct NewPerson {
     pub name: String
 }
@@ -47,13 +50,13 @@ pub fn get_comments(person: String, conn: DbConn) -> Json<Vec<(Person, (Reddit, 
     let person_request = people
         .filter(name.ilike(person))
         .inner_join(reddit::table
-            .inner_join(reddit_posts::table))
+                    .inner_join(reddit_posts::table))
         .load::<(Person, (Reddit, RedditPost))>(&*conn);
     Json(person_request.unwrap())
 }
 
 #[get("/")]
-pub fn list(conn: DbConn) -> Json<Vec<Person>> { 
+pub fn list(conn: DbConn) -> Json<Vec<Person>> {
     let person_request = people.load::<Person>(&*conn);
     Json(person_request.unwrap())
 }
