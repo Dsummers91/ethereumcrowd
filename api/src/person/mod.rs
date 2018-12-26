@@ -17,7 +17,6 @@ mod test;
 
 #[derive(Deserialize, Serialize, Insertable, PartialEq, Eq, Debug, Clone, Queryable, Identifiable, Associations)]
 #[table_name = "people"]
-
 pub struct Person {
     pub id: Uuid,
     pub name: String,
@@ -26,6 +25,12 @@ pub struct Person {
 #[derive(Deserialize)]
 pub struct NewPerson {
     pub name: String
+}
+
+#[derive(Serialize, Queryable)]
+pub struct PersonRedditPosts {
+    pub title: String,
+    pub body: String,
 }
 
 pub fn attach_uuid(person: NewPerson) -> Person {
@@ -46,12 +51,13 @@ pub fn get(person: String, conn: DbConn) -> Json<Person> {
 }
 
 #[get("/<person>/posts")]
-pub fn get_comments(person: String, conn: DbConn) -> Json<Vec<(Person, (Reddit, RedditPost))>> {
+pub fn get_comments(person: String, conn: DbConn) -> Json<Vec<PersonRedditPosts>> {
     let person_request = people
         .filter(name.ilike(person))
         .inner_join(reddit::table
                     .inner_join(reddit_posts::table))
-        .load::<(Person, (Reddit, RedditPost))>(&*conn);
+        .select((reddit_posts::dsl::title, reddit_posts::dsl::body))
+        .load::<PersonRedditPosts>(&*conn);
     Json(person_request.unwrap())
 }
 
