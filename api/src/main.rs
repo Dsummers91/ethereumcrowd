@@ -49,6 +49,7 @@ fn rocket() -> Rocket {
                person::create,
                person::list,
                person::get_comments,
+               person::get_posts,
         ])
         .mount("/reddit", routes![
                reddit::create,

@@ -3,4 +3,4 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && cd ../ > /dev/null && pwd )"
 
 cd $DIR/api
-cargo run
+cargo watch -x 'run'

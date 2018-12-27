@@ -26,7 +26,16 @@
 </div>
 <table>
   <tr *ngFor="let post of (posts$ | async)">
-    <td> {{ post[1][1].title }} </td>
-    <td> {{ post[1][1].body }} </td>
+    <td> {{ post.title }} </td>
+    <td> {{ post.score }} </td>
+    <td> {{ post.body }} </td>
+  </tr>
+</table>
+
+<table>
+  <tr *ngFor="let comment of (comments$ | async)">
+    <td> {{ comment.title }} </td>
+    <td> {{ comment.score }} </td>
+    <td> {{ comment.body }} </td>
   </tr>
 </table>

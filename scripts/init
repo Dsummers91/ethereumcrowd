@@ -24,6 +24,8 @@ tmux send-keys -t ${SESSION_NAME}:1 './scripts/front-end' C-m
 tmux new-window -n admin -t ${SESSION_NAME}
 tmux send-keys -t ${SESSION_NAME}:2 './scripts/admin' C-m
 
+tmux new-window -n test_cases -t ${SESSION_NAME}
+tmux send-keys -t ${SESSION_NAME}:3 './api/scripts/test.sh' C-m
 
 # Start out on the first window when we attach
 tmux select-window -t ${SESSION_NAME}:0

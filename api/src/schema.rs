@@ -36,6 +36,7 @@ table! {
         body -> Varchar,
         score -> Int4,
         subreddit -> Varchar,
+        submission_title -> Varchar,
     }
 }
 

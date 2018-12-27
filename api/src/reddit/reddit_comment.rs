@@ -21,6 +21,7 @@ pub struct RedditComment {
     pub body: String,
     pub score: i32,
     pub subreddit: String,
+    pub submission_title: String,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -30,11 +31,12 @@ pub struct NewRedditComment {
     pub body: String,
     pub score: i32,
     pub subreddit: String,
+    pub submission_title: String,
 }
 
 pub fn populate_new_reddit_comment(r: NewRedditComment, conn: &DbConn) -> RedditComment {
     let reddit_uid = get_id(r.username, &*conn);
-    RedditComment{comment_id: r.comment_id, reddit_id: reddit_uid, score: r.score, subreddit: r.subreddit, body: r.body, id: Uuid::new_v4()}
+    RedditComment{comment_id: r.comment_id, reddit_id: reddit_uid, score: r.score, subreddit: r.subreddit, body: r.body, submission_title: r.submission_title, id: Uuid::new_v4()}
 }
 
 #[get("/comments")]

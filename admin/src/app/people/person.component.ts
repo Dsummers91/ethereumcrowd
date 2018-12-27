@@ -24,6 +24,7 @@ export class PersonComponent implements OnInit {
     let id = this.route.snapshot.paramMap.get('id');
     this.person$ = this.api.getUser(id);
     this.posts$ = this.api.getUserPosts(id);
+    this.comments$ = this.api.getUserComments(id);
   }
 
   createRedditor(username) {
@@ -32,8 +33,8 @@ export class PersonComponent implements OnInit {
       .subscribe(() => {
         console.log('test');
       });
-  }  
-  
+  }
+
   createTwitter(username) {
     let person = this.route.snapshot.paramMap.get('id');
     this.api.createTwitter(person, username)

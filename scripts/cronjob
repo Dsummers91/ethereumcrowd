@@ -1,0 +1,4 @@
+#!/bin/bash
+
+sudo echo "0 * * * * root /home/deon/etheruemcrowd/reddit/scripts/run.sh" > /etc/cron.d/ethereumcrowd
+sudo service cron reload

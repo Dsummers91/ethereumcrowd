@@ -4,5 +4,6 @@ CREATE TABLE reddit_comments (
   comment_id VARCHAR UNIQUE NOT NULL,
   body VARCHAR NOT NULL,
   score INTEGER NOT NULL DEFAULT 0,
-  subreddit VARCHAR NOT NULL
+  subreddit VARCHAR NOT NULL,
+  submission_title VARCHAR NOT NULL
 )

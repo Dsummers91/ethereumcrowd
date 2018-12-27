@@ -28,6 +28,7 @@ conn.commit()
 cur.close()
 conn.close()
 
+print(rows)
 
 reddit = praw.Reddit(client_id=os.getenv("REDDIT_ID"),
     client_secret=os.getenv("REDDIT_SECRET"),
@@ -40,6 +41,7 @@ for row in rows:
       'username': row[2], 
       'comment_id': comment.id, 
       'score': comment.score, 
+      'submission_title': comment.submission.title,
       'subreddit': comment.subreddit.display_name,
       'body': comment.body,
       }, headers={'Content-type': 'application/json'})

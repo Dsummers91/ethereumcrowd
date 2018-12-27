@@ -8,9 +8,10 @@ use diesel;
 use rocket::response::status::NoContent;
 use diesel::prelude::*;
 use schema::people::dsl::*;
-use schema::{people, reddit, reddit_posts};
+use schema::{people, twitter, reddit, reddit_posts, reddit_comments};
 use reddit::Reddit;
 use reddit::reddit_post::RedditPost;
+use reddit::reddit_comment::RedditComment;
 use uuid::Uuid;
 
 mod test;
@@ -22,15 +23,23 @@ pub struct Person {
     pub name: String,
 }
 
+#[derive(Serialize, Queryable, Deserialize)]
+pub struct PersonDetails {
+    pub name: String,
+    pub reddit_username: Option<String>,
+    pub twitter_username: Option<String>,
+}
+
 #[derive(Deserialize)]
 pub struct NewPerson {
     pub name: String
 }
 
-#[derive(Serialize, Queryable)]
+#[derive(Serialize, Queryable, Deserialize)]
 pub struct PersonRedditPosts {
     pub title: String,
     pub body: String,
+    pub score: i32,
 }
 
 pub fn attach_uuid(person: NewPerson) -> Person {
@@ -43,20 +52,34 @@ pub fn get_id(n: String, conn: &DbConn) -> Uuid {
 }
 
 #[get("/<person>")]
-pub fn get(person: String, conn: DbConn) -> Json<Person> {
+pub fn get(person: String, conn: DbConn) -> Json<PersonDetails> {
     let person_request = people
         .filter(name.ilike(person))
-        .get_result::<Person>(&*conn);
+        .left_outer_join(reddit::table)
+        .left_outer_join(twitter::table)
+        .select((name, reddit::dsl::username.nullable(), twitter::dsl::username.nullable()))
+        .get_result::<PersonDetails>(&*conn);
     Json(person_request.unwrap())
 }
 
 #[get("/<person>/posts")]
-pub fn get_comments(person: String, conn: DbConn) -> Json<Vec<PersonRedditPosts>> {
+pub fn get_posts(person: String, conn: DbConn) -> Json<Vec<PersonRedditPosts>> {
     let person_request = people
         .filter(name.ilike(person))
         .inner_join(reddit::table
                     .inner_join(reddit_posts::table))
-        .select((reddit_posts::dsl::title, reddit_posts::dsl::body))
+        .select((reddit_posts::dsl::title, reddit_posts::dsl::body, reddit_posts::dsl::score))
+        .load::<PersonRedditPosts>(&*conn);
+    Json(person_request.unwrap())
+}
+
+#[get("/<person>/comments")]
+pub fn get_comments(person: String, conn: DbConn) -> Json<Vec<PersonRedditPosts>> {
+    let person_request = people
+        .filter(name.ilike(person))
+        .inner_join(reddit::table
+                    .inner_join(reddit_comments::table))
+        .select((reddit_comments::dsl::submission_title, reddit_comments::dsl::body, reddit_comments::dsl::score))
         .load::<PersonRedditPosts>(&*conn);
     Json(person_request.unwrap())
 }
