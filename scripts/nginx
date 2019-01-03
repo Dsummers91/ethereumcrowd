@@ -5,6 +5,6 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && cd ../ > /dev/null &
 pushd $DIR
 
 sudo nginx -c ./nginx.conf -p `pwd` -s stop
-sudo nginx -c ~/etheruemcrowd/nginx.conf -p `pwd`
+sudo nginx -c ./nginx.conf -p `pwd`
 
 popd

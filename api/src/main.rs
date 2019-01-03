@@ -1,7 +1,7 @@
 #![feature(plugin)]
-#![plugin(rocket_codegen)]
 #![feature(custom_attribute)]
-#![feature(custom_derive)]
+#![feature(decl_macro)]
+#![feature(proc_macro_hygiene)]
 #![allow(proc_macro_derive_resolution_fallback)]
 
 /// ORM and config
@@ -18,8 +18,8 @@ extern crate r2d2;
 extern crate r2d2_diesel;
 
 // Web server
-extern crate rocket;
-extern crate rocket_contrib;
+#[macro_use] extern crate rocket;
+#[macro_use] extern crate rocket_contrib;
 
 mod db;
 mod schema;

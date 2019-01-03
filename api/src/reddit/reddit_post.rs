@@ -1,9 +1,8 @@
 use db::Conn as DbConn;
-use rocket_contrib::Json;
+use rocket_contrib::json::Json;
 use diesel::QueryDsl;
 use diesel::RunQueryDsl;
 use diesel;
-use rocket::response::status::NoContent;
 use diesel::prelude::*;
 use schema::reddit_posts::dsl::*;
 use schema::{people, reddit, reddit_posts};

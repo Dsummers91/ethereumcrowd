@@ -1,7 +1,7 @@
 [package]
 authors = ["Deon <deonsummers91@gmail.com>"]
 name = "api"
-version = "0.1.0"
+version = "0.1.2"
 
 [dependencies]
 dotenv = "0.13.0"
@@ -9,9 +9,9 @@ postgres = "0.15.2"
 r2d2 = "0.8.3"
 r2d2-diesel = "1.0.0"
 rand = {version = "0.6.1", optional = true}
-rocket = "0.3.17"
-rocket_codegen = "0.3.17"
-rocket_cors = "0.3.0"
+rocket = "0.4"
+rocket_codegen = "0.4"
+rocket_cors = "0.4"
 serde = "1.0.80"
 serde_derive = "1.0.80"
 serde_json = "1.0.33"
@@ -31,7 +31,7 @@ version = "1.3.3"
 [dependencies.rocket_contrib]
 default-features = false
 features = ["json"]
-version = "0.3.17"
+version = "0.4"
 
 [dependencies.uuid]
 features = ["serde", "v4"]

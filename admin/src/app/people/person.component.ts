@@ -24,7 +24,6 @@ export class PersonComponent implements OnInit {
     let id = this.route.snapshot.paramMap.get('id');
     this.person$ = this.api.getUser(id);
     this.posts$ = this.api.getUserPosts(id);
-    this.comments$ = this.api.getUserComments(id);
   }
 
   createRedditor(username) {
