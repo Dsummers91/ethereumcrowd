@@ -1,4 +1,9 @@
-{{  (person$ | async)?.name }}
+Name: {{  (person$ | async)?.name }}
+<br/>
+twitter: {{  (person$ | async)?.twitter_username }}
+<br/>
+reddit: {{  (person$ | async)?.reddit_username }}
+
 <div>
   <h1>Twitter Form</h1>
   <form (ngSubmit)="createTwitter(twitter)" #twitterForm="ngForm">
@@ -24,18 +29,3 @@
   </form>
 
 </div>
-<table>
-  <tr *ngFor="let post of (posts$ | async)">
-    <td> {{ post.title }} </td>
-    <td> {{ post.score }} </td>
-    <td> {{ post.body }} </td>
-  </tr>
-</table>
-
-<table>
-  <tr *ngFor="let comment of (comments$ | async)">
-    <td> {{ comment.title }} </td>
-    <td> {{ comment.score }} </td>
-    <td> {{ comment.body }} </td>
-  </tr>
-</table>
