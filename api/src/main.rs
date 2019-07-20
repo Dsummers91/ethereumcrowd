@@ -1,7 +1,6 @@
 #![feature(plugin)]
-#![plugin(rocket_codegen)]
 #![feature(custom_attribute)]
-#![feature(custom_derive)]
+#![feature(proc_macro_hygiene, decl_macro)]
 #![allow(proc_macro_derive_resolution_fallback)]
 
 /// ORM and config
@@ -18,6 +17,7 @@ extern crate r2d2;
 extern crate r2d2_diesel;
 
 // Web server
+#[macro_use]
 extern crate rocket;
 extern crate rocket_contrib;
 
@@ -35,7 +35,8 @@ use std::env;
 
 fn rocket() -> Rocket {
     dotenv::from_filename("../.env").ok();
-    let default = rocket_cors::Cors::default();
+    let cors_options = rocket_cors::CorsOptions::default();
+    let default = cors_options.to_cors().unwrap();
 
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
 

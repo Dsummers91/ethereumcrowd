@@ -1,9 +1,9 @@
 use db::Conn as DbConn;
-use rocket_contrib::Json;
+use rocket_contrib::json::Json;
 use diesel::QueryDsl;
 use diesel::RunQueryDsl;
 use diesel;
-use rocket::response::status::NoContent;
+use rocket::response::status::NotFound;
 use diesel::prelude::*;
 use schema::twitter::dsl::*;
 use person::{Person, get_id as get_person_id};

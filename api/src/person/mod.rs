@@ -1,11 +1,11 @@
 #![allow(proc_macro_derive_resolution_fallback)]
 
 use db::Conn as DbConn;
-use rocket_contrib::Json;
+use rocket_contrib::json::Json;
 use diesel::QueryDsl;
 use diesel::RunQueryDsl;
 use diesel;
-use rocket::response::status::NoContent;
+use rocket::response::status::NotFound;
 use diesel::prelude::*;
 use schema::people::dsl::*;
 use schema::{people, twitter, reddit, reddit_posts, reddit_comments};
@@ -91,7 +91,7 @@ pub fn list(conn: DbConn) -> Json<Vec<Person>> {
 }
 
 #[post("/", format = "application/json", data = "<person>")]
-fn create(person: Json<NewPerson>, conn: DbConn) -> Json<Person> {
+pub fn create(person: Json<NewPerson>, conn: DbConn) -> Json<Person> {
     let new_person = attach_uuid(person.into_inner());
     let nperson = diesel::insert_into(people)
         .values(&new_person)
