@@ -13,4 +13,4 @@ python-twitter==3.5
 requests==2.20.1
 requests-oauthlib==1.0.0
 update-checker==0.16
-urllib3==1.24.1
+urllib3==1.26.5
